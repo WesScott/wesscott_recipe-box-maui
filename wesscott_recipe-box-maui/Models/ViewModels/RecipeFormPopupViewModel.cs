@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using wesscott_recipe_box_maui.Extensions.CommonUtils;
@@ -64,9 +65,9 @@ namespace wesscott_recipe_box_maui.Models.ViewModels
         }
 
         [RelayCommand]
-        public void Cancel()
+        public async Task Cancel()
         {
-            CommonUtils.ClearPopupStack();
+            await CommonUtils.ClearPopupStack();
         }
 
         [RelayCommand]
@@ -78,6 +79,7 @@ namespace wesscott_recipe_box_maui.Models.ViewModels
         [RelayCommand]
         public void EditIngredient(Ingredient ingredient)
         {
+            SelectedIngredient = ingredient;
             IsEditingIngredient = true;
         }
 
@@ -114,16 +116,38 @@ namespace wesscott_recipe_box_maui.Models.ViewModels
             RecipeIngredients?.Remove(SelectedIngredient);
             RecipeIngredients?.Add(editedIngredient);
 
-            _formRecipe.Ingredients = RecipeIngredients ?? new ObservableCollection<Ingredient>();
-            PopulateRecipe();
+            SetIngredientEditorToDefault();
+        }
 
+        private void SetIngredientEditorToDefault()
+        {
+            IsEditingIngredient = false;
+            SelectedIngredient = null;
+            IngredientEditorName = string.Empty;
+            IngredientEditorAmount = string.Empty;
+            IngredientEditorUnit = string.Empty;
         }
 
         [RelayCommand]
         public void CancelIngredientEdits()
         {
-            IsEditingIngredient = false;
-            SelectedIngredient = null;
+            SetIngredientEditorToDefault();
+        }
+
+        [RelayCommand]
+        public void ApplyWholeRecipe()
+        {
+            // Try to craft the new recipe with all the pieces
+            try
+            {
+                Recipe editedRecipe;
+                editedRecipe = new Recipe(RecipeName, RecipeDescription, RecipeIngredients!, RecipeSteps.Split('\n').ToObservableCollection(), RecipeInstructions);
+            }
+            catch (Exception ex)
+            {
+                _ = Toast.Make($"Error creating recipe: {ex.Message}").Show();
+                return;
+            }
         }
     }
 }
