@@ -28,20 +28,20 @@ namespace wesscott_recipe_box_maui.Models.ViewModels
 			RecipeSelected = false;
 
 			Ingredient testIng1 = new Ingredient("TestIngredient 1");
-			List<Ingredient> testIngList = new List<Ingredient>();
+            ObservableCollection<Ingredient> testIngList = new ObservableCollection<Ingredient>();
 			testIngList.Add(testIng1);
 
-			Recipe testRecipe = new Recipe("TestRecipe", "This is a test recipe", testIngList, new List<string>(), "Mix And Cook");
+			Recipe testRecipe = new Recipe("TestRecipe", "This is a test recipe", testIngList, new ObservableCollection<string>(), "Mix And Cook");
 
 			AllRecipes.Add(testRecipe);
 
             Ingredient testIng2 = new Ingredient("Cumin", "1", "tsp");
             Ingredient testIng3 = new Ingredient("1 Onion");
-            List<Ingredient> testIngList2 = new List<Ingredient>();
+            ObservableCollection<Ingredient> testIngList2 = new ObservableCollection<Ingredient>();
             testIngList2.Add(testIng2);
             testIngList2.Add(testIng3);
 
-            List<string> recipeSteps = new List<string>();
+            ObservableCollection<string> recipeSteps = new ObservableCollection<string>();
             string step1 = "1) Mix Well";
             string step2 = "2) Cook it";
             recipeSteps.Add(step1);

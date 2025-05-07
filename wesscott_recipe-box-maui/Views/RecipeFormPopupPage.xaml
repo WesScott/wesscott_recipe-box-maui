@@ -11,7 +11,7 @@
     <!--
     Row 0: Name & Titles
     Row 1: Desc
-    Row 2: Instructions
+    Row 2: Steps and Ingredients Lists
     Row 3: IngredientEditor
     Row 4: Buttons
     
@@ -19,7 +19,7 @@
     Column 1: Steps
     Column 2: Ingredients
     -->
-    <Grid RowDefinitions=".05*,.4*,.4*,.1*,.05*" ColumnDefinitions=".2*,.4*,.4*" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="5,5,5,5">
+    <Grid RowDefinitions=".05*,.4*,.4*,.1*,.05*" ColumnDefinitions=".2*,.5*,.3*" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="5,10,5,5">
         
         <!--#region  Name-->
         <HorizontalStackLayout Grid.Row="0" Grid.Column="0" Margin="5,5,5,5">
@@ -33,7 +33,7 @@
         <!--#endregion Name-->
         
         <!--#region Description-->
-        <HorizontalStackLayout Grid.Row="1" Grid.Column="0" Margin="5,5,5,5">
+        <HorizontalStackLayout Grid.Row="1" Grid.Column="0" Margin="5,5,5,0">
             <Label Text="Description: " VerticalOptions="Center"/>
             <Entry Margin="5,0,0,0"
                    HeightRequest="50"
@@ -44,7 +44,7 @@
         <!--#endregion Description-->
 
         <!--#region Instructions-->
-        <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Margin="5,5,5,5">
+        <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Margin="5,5,5,0">
             <Label Text="Instructions: " VerticalOptions="Center"/>
             <Editor Margin="5,0,0,0"
                    HeightRequest="250"
@@ -55,22 +55,22 @@
         <!--#endregion Instructions-->
         
         <!--#region Steps-->
-        <VerticalStackLayout Grid.Row="0" Grid.Column="1" Grid.RowSpan="4" Margin="5,5,5,5">
+        <VerticalStackLayout Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Margin="5,5,5,5">
             <Label Text="Steps:" HorizontalOptions="Center"/>
             <Editor Margin="0,10,0,0"
                     HeightRequest="750"
-                    WidthRequest="400"
+                    WidthRequest="500 "
                     HorizontalOptions="Center"
                     Text="{Binding RecipeSteps}"/>
         </VerticalStackLayout>
         <!--#endregion Steps-->
 
         <!--#region Ingredients-->
-        <VerticalStackLayout Grid.Row="0" Grid.Column="2" Grid.RowSpan="4" Margin="5,5,5,5">
+        <VerticalStackLayout Grid.Row="0" Grid.Column="2" Grid.RowSpan="3" Margin="5,5,5,0">
             <Label Text="Ingredients:" HorizontalOptions="Center"/>
             <Border>
                 <CollectionView Margin="0,10,0,0"
-                   ItemsSource="{Binding RecipeIngredients}"
+                   ItemsSource="{Binding RecipeIngredients, Mode=TwoWay}"
                    SelectionMode="Single"
                    SelectedItem="{Binding SelectedIngredient, Mode=TwoWay}"
                    HeightRequest="750"
@@ -79,7 +79,7 @@
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="datamodels:Ingredient">
                             <HorizontalStackLayout VerticalOptions="Center" >
-                                <Label Text="{Binding .}" VerticalOptions="Center" FontSize="Medium"/>
+                                <Label Text="{Binding .}" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Medium"/>
                                 <Button Text="Edit" VerticalOptions="Center" BackgroundColor="DarkRed" Margin="5,5,0,5" Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecipeFormPopupViewModel}}, Path=EditIngredientCommand}" CommandParameter="{Binding .}"/>
                             </HorizontalStackLayout>
                         </DataTemplate>
@@ -101,21 +101,26 @@
         Column 2: of
         Column 3: Ingredient Name
         -->
-        <Grid Grid.Row="3" Grid.RowSpan="2" Grid.Column="2" RowDefinitions=".2*,.6*,.2*" ColumnDefinitions=".3*,.3*,.1*,.3*" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"  IsEnabled="{Binding IsEditingIngredient}">
-            <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="4"
+        <Grid Grid.Row="3" Grid.RowSpan="2" Grid.Column="2" RowDefinitions=".1*,.6*,.3*" ColumnDefinitions=".3*,.3*,.1*,.3*" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"  IsEnabled="{Binding IsEditingIngredient}" Margin="0,-50,0,0">
+
+            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" HorizontalOptions="Center"
                Text="Edit Ingredient"/>
 
             <!--#region Amount-->
-            <VerticalStackLayout Grid.Row="1" Grid.Column="0" VerticalOptions="Center">
-                <Entry Placeholder="{Binding SelectedIngredient.Amount}"/>
-                <Label Text="Amount"/>
+            <VerticalStackLayout Grid.Row="1" Grid.Column="0" VerticalOptions="Center" HorizontalOptions="End">
+                <Entry Style="{StaticResource IngredientEditorEntry}"
+                    Text="{Binding IngredientEditorAmount}"
+                    Placeholder="{Binding SelectedIngredient.Amount}"/>
+                <Label Text="Amount" HorizontalOptions="Center"/>
             </VerticalStackLayout>
             <!--#endregion Amount-->
 
             <!--#region Unit-->
             <VerticalStackLayout Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
-                <Entry Placeholder="{Binding SelectedIngredient.Unit}"/>
-                <Label Text="Unit"/>
+                <Entry Style="{StaticResource IngredientEditorEntry}"
+                    Text="{Binding IngredientEditorUnit}"
+                    Placeholder="{Binding SelectedIngredient.Unit}"/>
+                <Label Text="Unit" HorizontalOptions="Center"/>
             </VerticalStackLayout>
             <!--#endregion Unit-->
 
@@ -124,15 +129,17 @@
             <!--#endregion of-->
 
             <!--#region Item-->
-            <VerticalStackLayout Grid.Row="1" Grid.Column="3" VerticalOptions="Center">
-                <Entry Placeholder="{Binding SelectedIngredient.Name}"/>
-                <Label Text="Ingredient"/>
+            <VerticalStackLayout Grid.Row="1" Grid.Column="3" VerticalOptions="Center" HorizontalOptions="Start">
+                <Entry Style="{StaticResource IngredientEditorEntry}" WidthRequest="125"
+                    Text="{Binding IngredientEditorName}"
+                    Placeholder="{Binding SelectedIngredient.Name}"/>
+                <Label Text="Ingredient" HorizontalOptions="Center"/>
             </VerticalStackLayout>
             <!--#endregion Item-->
 
             <!--#region Control Buttons-->
             <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="4" HorizontalOptions="Center" VerticalOptions="Center">
-                <Button Text="Apply"/>
+                <Button Text="Apply" Command="{Binding ApplyIngredientEditsCommand}"/>
                 <Button Text="Cancel" Command="{Binding CancelIngredientEditsCommand}"/>
             </HorizontalStackLayout>
             <!--#endregion Control Buttons-->
@@ -142,7 +149,7 @@
         
         <!--#region Buttons-->
         <HorizontalStackLayout Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalOptions="Center" Margin="3,3,3,3">
-            <Button Text="Apply" />
+            <Button Text="Apply"/>
             <Button Text="Cancel" BackgroundColor="DarkRed" Command="{Binding CancelCommand}" Margin="5,0,0,0"/>
         </HorizontalStackLayout>
         <!--#region Buttons-->

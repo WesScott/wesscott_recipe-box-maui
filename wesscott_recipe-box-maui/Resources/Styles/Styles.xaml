@@ -38,6 +38,14 @@
         <Setter Property="Margin" Value="0,10,0,0"/>
     </Style>
     <!--#endregion CustomLabels-->
+        
+     <!--#region CustomEntries-->
+    <Style TargetType="Entry" x:Key="IngredientEditorEntry">
+        <Setter Property="Margin" Value="5,3,5,3"/>
+        <Setter Property="HeightRequest" Value="45"/>
+        <Setter Property="WidthRequest" Value="75"/>
+    </Style>
+    <!--#endregion CustomEntries-->
 
     <!--#region Defaults-->
     <Style TargetType="ActivityIndicator">
