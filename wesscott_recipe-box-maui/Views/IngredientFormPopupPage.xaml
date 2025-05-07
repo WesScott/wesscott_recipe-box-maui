@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mopups:PopupPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mopups="clr-namespace:Mopups.Pages;assembly=Mopups"
+             xmlns:viewmodels="clr-namespace:wesscott_recipe_box_maui.Models.ViewModels"
+             xmlns:datamodels="clr-namespace:wesscott_recipe_box_maui.Models.DataModels"
+             x:Class="wesscott_recipe_box_maui.Views.IngredientFormPopupPage"
+             x:DataType="viewmodels:IngredientFormPopupViewModel"
+             Background="Gray"
+             MaximumHeightRequest="500"
+             MaximumWidthRequest="750">
+    
+    <!--
+    Row 0: Title
+    Row 1: Ingredient Row
+    Row 2: Control Buttons
+    
+    Column 0: Amount
+    Column 1: Unit
+    Column 2: of
+    Column 3: Ingredient Name
+    -->
+    <Grid RowDefinitions=".05*,.9*,.05*" ColumnDefinitions=".3*,.3*,.1*,.3*" HorizontalOptions="Center" VerticalOptions="Center" >
+
+        <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="4"
+               Text="Edit Ingredient"/>
+
+        <!--#region Amount-->
+        <VerticalStackLayout Grid.Row="1" Grid.Column="0">
+            <Entry/>
+            <Label Text="Amount"/>
+        </VerticalStackLayout>
+        <!--#endregion Amount-->
+
+        <!--#region Unit-->
+        <VerticalStackLayout Grid.Row="1" Grid.Column="1">
+            <Entry/>
+            <Label Text="Unit"/>
+        </VerticalStackLayout>
+        <!--#endregion Unit-->
+
+        <!--#region of-->
+        <Label Grid.Row="1" Grid.Column="2" Text="of"/>
+        <!--#endregion of-->
+
+        <!--#region Item-->
+        <VerticalStackLayout Grid.Row="1" Grid.Column="3">
+            <Entry/>
+            <Label Text="Unit"/>
+        </VerticalStackLayout>
+        <!--#endregion Item-->
+        
+        <!--#region Control Buttons-->
+        <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="4" HorizontalOptions="Center">
+            <Button Text="Apply"/>
+            <Button Text="Cancel" Command="{Binding CancelCommand}"/>
+        </HorizontalStackLayout>
+        <!--#endregion Control Buttons-->
+
+    </Grid>
+   
+</mopups:PopupPage>

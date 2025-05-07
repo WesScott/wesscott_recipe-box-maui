@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+			 xmlns:viewmodels="clr-namespace:wesscott_recipe_box_maui.Models.ViewModels"
+			 xmlns:datamodels="clr-namespace:wesscott_recipe_box_maui.Models.DataModels"
+			 x:DataType="viewmodels:MainPageViewModel"
+			 x:Class="wesscott_recipe_box_maui.MainPage">
+
+	<ContentPage.Behaviors>
+		<toolkit:EventToCommandBehavior EventName="Loaded" Command="{Binding GetAllRecipesCommand}"/>
+	</ContentPage.Behaviors>
+
+	<!--
+	Row 1: Column Titles
+	Row 2: Main Areas
+	Row 3: Auxillary Buttons
+	
+	Column 1: RecipePicker
+	Column 2: Recipe Display Grid
+	-->
+    <Grid RowDefinitions=".05*,.9*,.05*" ColumnDefinitions=".35*,.65*">
+
+        <ActivityIndicator Grid.RowSpan="3" Grid.ColumnSpan="2" IsVisible="{Binding RecipesLoading}" IsRunning="{Binding RecipesLoading}" HorizontalOptions="Center" VerticalOptions="Center"/>
+
+        <!--#region RecipeSelection (LeftPane)-->
+		<Label Grid.Row="0" Grid.Column="0"
+			   Text="My Recipes"
+               Style="{StaticResource MainPageColumnHeader}"/>
+		
+		<Border  Grid.Row="1" Grid.Column="0" Margin="10,0,10,0">
+			<CollectionView SelectionMode="Single"
+						ItemsSource="{Binding AllRecipes}"
+						SelectedItem="{Binding SelectedRecipe, Mode=TwoWay}">
+				<CollectionView.ItemTemplate>
+					<DataTemplate x:DataType="datamodels:Recipe">
+						<HorizontalStackLayout>
+							<HorizontalStackLayout.GestureRecognizers>
+								<TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainPageViewModel}}, Path=ChooseRecipeCommand}"  CommandParameter="{Binding .}" />
+							</HorizontalStackLayout.GestureRecognizers>
+                            <Label Text="{Binding Name}" HorizontalOptions="Start" Margin="10,0,0,0"/>
+                        </HorizontalStackLayout>
+					</DataTemplate>
+				</CollectionView.ItemTemplate>
+			</CollectionView>
+		</Border>
+
+		<HorizontalStackLayout Grid.Row="2" Grid.Column="0" HorizontalOptions="Center">
+			
+			<Button Style="{StaticResource AddRecipeButton}" Command="{Binding AddRecipeCommand}"/>
+
+			<Button Style="{StaticResource ImportRecipeButton}"/>
+
+		</HorizontalStackLayout>
+		<!--#endregion RecipeSelection (LeftPane)-->
+
+		<!--#region RecipeDisplay (RightPane)-->
+		<!-- 
+		Row 0: Recipe Name
+		Row 1: Description
+		Row 2: Steps & Ingredients
+		Row 3: Share
+		-->
+		<Grid Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" RowDefinitions=".05*,.05*,.8*,.05*" IsVisible="{Binding RecipeSelected}">
+			
+			<Label Grid.Row="0" 
+				   Text="{Binding SelectedRecipe.Name}"
+                   Style="{StaticResource MainPageColumnHeader}"/>
+
+            <Label Grid.Row="1" HorizontalOptions="Center"
+				   Text="{Binding SelectedRecipe.Description}"/>
+
+			<Grid Grid.Row="2" ColumnDefinitions=".55*,.45*">
+
+                <Border Grid.Column="0">
+                    <VerticalStackLayout Margin="10,0,10,0">
+                        <ListView ItemsSource="{Binding SelectedRecipe.Steps}" VerticalOptions="Start"/>
+                        <BoxView VerticalOptions="Center" BackgroundColor="Gray" HeightRequest="2"/>
+                        <Label Text="{Binding SelectedRecipe.Instructions}"  VerticalOptions="End"/>
+                    </VerticalStackLayout>
+                    
+				</Border>
+
+                <Border Grid.Column="1" Margin="10,0,10,0">
+                    <ListView ItemsSource="{Binding SelectedRecipe.Ingredients}" Margin="10,0,0,0"/>
+                </Border>
+				
+			</Grid>
+
+            <HorizontalStackLayout Grid.Row="3" HorizontalOptions="Center">
+                <Button Style="{StaticResource ShareRecipeButton}"/>
+                <Button Style="{StaticResource EditRecipeButton}" Command="{Binding EditRecipeCommand}"/>
+            </HorizontalStackLayout>
+			
+			
+		</Grid>
+		<!--#endregion RecipeDisplay (RightPane)-->
+
+	</Grid>
+
+
+</ContentPage>
