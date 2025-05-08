@@ -30,7 +30,7 @@
 		
 		<Border  Grid.Row="1" Grid.Column="0" Margin="10,0,10,0">
 			<CollectionView SelectionMode="Single"
-						ItemsSource="{Binding AllRecipes}"
+						ItemsSource="{Binding AllRecipes, Mode=TwoWay}"
 						SelectedItem="{Binding SelectedRecipe, Mode=TwoWay}">
 				<CollectionView.ItemTemplate>
 					<DataTemplate x:DataType="datamodels:Recipe">

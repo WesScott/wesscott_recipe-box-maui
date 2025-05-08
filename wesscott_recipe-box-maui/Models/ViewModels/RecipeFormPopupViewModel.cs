@@ -3,6 +3,7 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Mopups.Services;
 using wesscott_recipe_box_maui.Extensions.CommonUtils;
 using wesscott_recipe_box_maui.Models.DataModels;
 using wesscott_recipe_box_maui.Views;
@@ -70,11 +71,6 @@ namespace wesscott_recipe_box_maui.Models.ViewModels
             await CommonUtils.ClearPopupStack();
         }
 
-        [RelayCommand]
-        public void Apply()
-        {
-
-        }
 
         [RelayCommand]
         public void EditIngredient(Ingredient ingredient)
@@ -135,13 +131,17 @@ namespace wesscott_recipe_box_maui.Models.ViewModels
         }
 
         [RelayCommand]
-        public void ApplyWholeRecipe()
+        public async Task ApplyWholeRecipe()
         {
             // Try to craft the new recipe with all the pieces
             try
             {
                 Recipe editedRecipe;
                 editedRecipe = new Recipe(RecipeName, RecipeDescription, RecipeIngredients!, RecipeSteps.Split('\n').ToObservableCollection(), RecipeInstructions);
+
+                await CommonUtils.AppendRecipeToFile(editedRecipe);
+
+                await CommonUtils.ClearPopupStack();
             }
             catch (Exception ex)
             {

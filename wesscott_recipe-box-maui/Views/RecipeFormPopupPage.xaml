@@ -149,7 +149,7 @@
         
         <!--#region Buttons-->
         <HorizontalStackLayout Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalOptions="Center" Margin="3,3,3,3">
-            <Button Text="Apply"/>
+            <Button Text="Apply" Command="{Binding ApplyWholeRecipeCommand}"/>
             <Button Text="Cancel" BackgroundColor="DarkRed" Command="{Binding CancelCommand}" Margin="5,0,0,0"/>
         </HorizontalStackLayout>
         <!--#region Buttons-->

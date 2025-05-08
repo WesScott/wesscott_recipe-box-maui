@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using wesscott_recipe_box_maui.Extensions.CommonUtils;
@@ -22,36 +23,24 @@ namespace wesscott_recipe_box_maui.Models.ViewModels
 		ObservableCollection<Recipe> allRecipes = new();
 
 		[RelayCommand]
-		public void GetAllRecipes()
+		public async Task GetAllRecipes()
 		{
 			RecipesLoading = true;
 			RecipeSelected = false;
 
-			Ingredient testIng1 = new Ingredient("TestIngredient 1");
-            ObservableCollection<Ingredient> testIngList = new ObservableCollection<Ingredient>();
-			testIngList.Add(testIng1);
-
-			Recipe testRecipe = new Recipe("TestRecipe", "This is a test recipe", testIngList, new ObservableCollection<string>(), "Mix And Cook");
-
-			AllRecipes.Add(testRecipe);
-
-            Ingredient testIng2 = new Ingredient("Cumin", "1", "tsp");
-            Ingredient testIng3 = new Ingredient("1 Onion");
-            ObservableCollection<Ingredient> testIngList2 = new ObservableCollection<Ingredient>();
-            testIngList2.Add(testIng2);
-            testIngList2.Add(testIng3);
-
-            ObservableCollection<string> recipeSteps = new ObservableCollection<string>();
-            string step1 = "1) Mix Well";
-            string step2 = "2) Cook it";
-            recipeSteps.Add(step1);
-            recipeSteps.Add(step2);
-
-            Recipe testRecipe2 = new Recipe("Test Recipe 2", "This is a second test recipe", testIngList2, recipeSteps, "Mix And Cook as well");
-
-            AllRecipes.Add(testRecipe2);
-
-            RecipesLoading = false;
+			try
+			{
+				AllRecipes = await CommonUtils.GetRecipesFromFile() ?? [];
+            }
+			catch
+			{
+				_ = Toast.Make($"Error loading recipes").Show();
+				AllRecipes = [];
+            }
+			finally
+			{
+                RecipesLoading = false;
+            }
         }
 
 		[RelayCommand]
@@ -70,8 +59,13 @@ namespace wesscott_recipe_box_maui.Models.ViewModels
 		[RelayCommand]
 		public async Task AddRecipe()
 		{
+			RecipesLoading = true;
+
             RecipeFormPopupPage recipeFormPopup = new RecipeFormPopupPage();
             await CommonUtils.OpenPopup(recipeFormPopup);
+            AllRecipes = await CommonUtils.GetRecipesFromFile() ?? [];
+
+            RecipesLoading = false;
         }
 
 		[RelayCommand]
@@ -80,8 +74,15 @@ namespace wesscott_recipe_box_maui.Models.ViewModels
 			if (SelectedRecipe == null)
 				return;
 
+            RecipesLoading = true;
+
             RecipeFormPopupPage recipeFormPopup = new RecipeFormPopupPage(SelectedRecipe);
+
             await CommonUtils.OpenPopup(recipeFormPopup);
+			AllRecipes = await CommonUtils.GetRecipesFromFile() ?? [];
+
+			
+			RecipesLoading = false;
         }
 	}
 }
